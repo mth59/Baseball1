@@ -1,0 +1,147 @@
+---
+title: "CatcherTeamScoreCalculator"
+output: html_document
+date: "2024-03-17"
+---
+
+```{r}
+library(readxl)
+library(ggplot2)
+library(dplyr)
+```
+
+```{r}
+# Importing the data 
+# game_data <- read_excel("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//VirginiaMarch22-24//REVISED Virginia@Pitt 22MAR24.xlsx")
+# game_data <- read_excel("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//VirginiaMarch22-24//Virginia@Pitt 23MAR24.xlsx")
+# game_data <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//GTApril5-7//4-5-24 Pitt vs. Georgia Tech Game 1.csv")
+# game_data <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//GTApril5-7//GT@Pitt 06APR24.csv")
+# game_data <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//DukeApril13-14//REVISED Duke@Pitt G1 13APR24.csv")
+
+# game_data <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//DukeApril13-14//REVISED Duke@Pitt G2 13APR24.csv")
+
+# game_data <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//DukeApril13-14//Duke@Pitt 14APR24.csv")
+# game_data <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//BryantApril27-29//REVISED Bryant@Pitt 26APR2024.csv")
+# game_data <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//BryantApril27-29//REVISED Bryant@Pitt 27APR24.csv")
+game_data <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//BryantApril27-29//Bryant@Pitt 28APR24.csv")
+
+```
+
+```{r}
+# Data when pitt is hitting (away team catches)
+pitt_catcher_data <- game_data[game_data$CatcherTeam == "Pittsburgh",] 
+
+# Data for our catchers 
+away_catcher_data <- game_data[game_data$CatcherTeam != "Pittsburgh",] 
+```
+
+```{r}
+pitt_catcher_data <- pitt_catcher_data[, c("BatterTeam", "PitchCall", "PlateLocHeight", "PlateLocSide",
+                                            "yt_PitchSpinConfidence","yt_PitchReleaseConfidence")]
+away_catcher_data <- away_catcher_data[, c("BatterTeam", "PitchCall", "PlateLocHeight", "PlateLocSide",
+                                            "yt_PitchSpinConfidence", "yt_PitchReleaseConfidence")]
+summary(pitt_catcher_data)
+summary(away_catcher_data)
+
+# Remove rows that contain NA 
+pitt_catcher_data <- na.omit(pitt_catcher_data)
+away_catcher_data <- na.omit(away_catcher_data)
+
+pitt_catcher_data <- pitt_catcher_data %>%
+  filter(yt_PitchReleaseConfidence != 0, yt_PitchSpinConfidence > 0.95)
+
+away_catcher_data <- away_catcher_data %>%
+  filter(yt_PitchReleaseConfidence != 0, yt_PitchSpinConfidence > 0.95)
+
+pitt_catcher_data <- pitt_catcher_data %>%
+  select(-yt_PitchSpinConfidence, -yt_PitchReleaseConfidence)
+
+away_catcher_data <- away_catcher_data %>%
+  select(-yt_PitchSpinConfidence, -yt_PitchReleaseConfidence)
+
+summary(pitt_catcher_data)
+summary(away_catcher_data)
+```
+
+
+```{r}
+# Left and right strike zone borders in feet 
+left_border <- 0.708333
+right_border <- -0.708333 
+
+# Using the rough standard zone for a 6' player. 
+# This could affect the data slightly, as the height of the zone differs by a noticeable amount between a 5'8 and 6'4 player. 
+lower_border <- 1.5
+upper_border <- 3 + (2.5/12)
+
+# Will add and subtract this constant from the borders to ensure that if any part of the ball hits the zone, it is a strike. 
+baseball_diameter_ft <- 2.9/12
+baseball_radius_ft <- baseball_diameter_ft/2
+
+left_true_strike_border <- left_border + baseball_radius_ft
+right_true_strike_border <- right_border - baseball_diameter_ft 
+lower_true_strike_border <- lower_border - baseball_radius_ft 
+upper_true_strike_border <- upper_border + baseball_radius_ft 
+
+
+# Create a function to check if a pitch is in the strike zone
+# This function returns true if the pitch is in the strike zone, false if it is not 
+is_in_strike_zone <- function(PlateLocSide, PlateLocHeight) {
+  return(PlateLocSide >= right_true_strike_border & PlateLocSide <= left_true_strike_border &
+         PlateLocHeight >= lower_true_strike_border & PlateLocHeight <= upper_true_strike_border)
+}
+
+# Add a new column to pitt_hitting_data1 to indicate if each pitch is in the strike zone
+# If function returned true, then "Strike", and if it returned false, then "Ball" 
+pitt_catcher_data$TruePitchCall <- ifelse(is_in_strike_zone(pitt_catcher_data$PlateLocSide, pitt_catcher_data$PlateLocHeight), "Strike", "Ball")
+
+# Same thing, but for the other side of the data 
+away_catcher_data$TruePitchCall <- ifelse(is_in_strike_zone(away_catcher_data$PlateLocSide, away_catcher_data$PlateLocHeight), "Strike", "Ball")
+
+
+# View the updated data frames
+head(pitt_catcher_data)
+head(away_catcher_data)
+```
+
+```{r}
+# For opposing catcher data, counting the number of true positives, true negatives, false positives, and false negatives 
+pitt_true_strikes_called <- sum(pitt_catcher_data$PitchCall == "StrikeCalled" & pitt_catcher_data$TruePitchCall == "Strike")
+pitt_true_balls_called <- sum(pitt_catcher_data$PitchCall == "BallCalled" & pitt_catcher_data$TruePitchCall == "Ball")
+pitt_strikes_called_balls <- sum(pitt_catcher_data$PitchCall == "BallCalled" & pitt_catcher_data$TruePitchCall == "Strike")
+pitt_balls_called_strikes <- sum(pitt_catcher_data$PitchCall == "StrikeCalled" & pitt_catcher_data$TruePitchCall == "Ball")
+
+# Doing the same thing, but to check how our catchers did 
+away_true_called_strikes <- sum(away_catcher_data$PitchCall == "StrikeCalled" & away_catcher_data$TruePitchCall == "Strike")
+away_true_balls_called <- sum(away_catcher_data$PitchCall == "BallCalled" & away_catcher_data$TruePitchCall == "Ball")
+away_strikes_called_balls <- sum(away_catcher_data$PitchCall == "BallCalled" & away_catcher_data$TruePitchCall == "Strike")
+away_balls_called_strikes <- sum(away_catcher_data$PitchCall == "StrikeCalled" & away_catcher_data$TruePitchCall == "Ball")
+
+# Look at the results 
+cat("Pitt Catching Data:\n")
+cat("Strikes called strikes:", pitt_true_strikes_called, "\n")
+cat("Balls called balls:", pitt_true_balls_called, "\n")
+cat("Balls called strikes:", pitt_balls_called_strikes, "\n")
+cat("Strikes called balls:", pitt_strikes_called_balls, "\n")
+
+cat("\nAway Catching Data:\n")
+cat("Strikes called strikes:", away_true_called_strikes, "\n")
+cat("Balls called balls:", away_true_balls_called, "\n")
+cat("Balls called strikes:", away_balls_called_strikes, "\n")
+cat("Strikes called balls:", away_strikes_called_balls, "\n")
+```
+
+```{r}
+# Both teams catchers final score 
+pitt_catcher_score <- pitt_balls_called_strikes - pitt_strikes_called_balls
+pitt_catcher_score
+away_catcher_score <- away_balls_called_strikes - away_strikes_called_balls
+away_catcher_score
+```
+
+```{r}
+# Our final +/- score 
+pitt_team_score <- pitt_catcher_score - away_catcher_score
+pitt_team_score
+```
+
