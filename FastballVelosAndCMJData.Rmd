@@ -1,0 +1,418 @@
+---
+title: "FastballVelosAndCMJData"
+output: html_document
+date: "2024-05-01"
+---
+
+```{r}
+library(readxl)
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(corrplot)
+```
+
+```{r}
+# august23
+aug_15 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//August23//Baseball-Session-08_15_23-Tests_Countermovement_Jump.csv")
+aug_21 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//August23//Baseball-Session-08_21_23-Tests_Countermovement_Jump.csv")
+aug_23 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//August23//Baseball-Session-08_23_23-Tests_Countermovement_Jump.csv")
+aug_28 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//August23//Baseball-Session-08_28_23-Tests_Countermovement_Jump.csv")
+
+# september23 
+sep_4 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//September23//Baseball-Session-09_04_23-Tests_Countermovement_Jump.csv")
+sep_8 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//September23//Baseball-Session-09_08_23-Tests_Countermovement_Jump.csv")
+sep_11 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//September23//Baseball-Session-09_11_23-Tests_Countermovement_Jump.csv")
+sep_18 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//September23//Baseball-Session-09_18_23-Tests_Countermovement_Jump.csv")
+sep_25 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//September23//Baseball-Session-09_25_23-Tests_Countermovement_Jump.csv")
+
+# october23 
+oct_2 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//October23//Baseball-Session-10_02_23-Tests_Countermovement_Jump.csv")
+oct_4 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//October23//Baseball-Session-10_04_23-Tests_Countermovement_Jump.csv")
+oct_9 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//October23//Baseball-Session-10_09_23-Tests_Countermovement_Jump.csv")
+oct_16 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//October23//Baseball-Session-10_16_23-Tests_Countermovement_Jump.csv")
+oct_23 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//October23//Baseball-Session-10_23_23-Tests_Countermovement_Jump.csv")
+oct_30 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//October23//Baseball-Session-10_30_23-Tests_Countermovement_Jump.csv")
+
+# november23 
+nov_6 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//November23//Baseball-Session-11_06_23-Tests_Countermovement_Jump.csv")
+nov_13 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//November23//Baseball-Session-11_13_23-Tests_Countermovement_Jump.csv")
+nov_27 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//November23//Baseball-Session-11_27_23-Tests_Countermovement_Jump.csv")
+
+# december23 
+dec_4 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//December23//Baseball-Session-12_04_23-Tests_Countermovement_Jump.csv")
+
+# january24 
+jan_9 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//January24//Baseball-Session-01_09_24-Tests_Countermovement_Jump.csv")
+jan_16 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//January24//Baseball-Session-01_16_24-Tests_Countermovement_Jump.csv")
+jan_23 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//January24//Baseball-Session-01_23_24-Tests_Countermovement_Jump.csv")
+jan_30 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//January24//Baseball-Session-01_30_24-Tests_Countermovement_Jump.csv")
+
+# february24 
+feb_6 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//February24//Baseball-Session-02_06_24-Tests_Countermovement_Jump.csv")
+feb_13 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//February24//Baseball-Session-02_13_24-Tests_Countermovement_Jump.csv")
+feb_19 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//February24//Baseball-Session-02_19_24-Tests_Countermovement_Jump.csv")
+feb_20 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//February24//Baseball-Session-02_20_24-Tests_Countermovement_Jump.csv")
+feb_27 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//February24//Baseball-Session-02_27_24-Tests_Countermovement_Jump.csv")
+feb_28 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//February24//Baseball-Session-02_28_24-Tests_Countermovement_Jump.csv")
+
+# march24
+mar_05 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//March24//Baseball-Session-03_05_24-Tests_Countermovement_Jump.csv")
+mar_14 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//March24//Baseball-Session-03_14_24-Tests_Countermovement_Jump.csv")
+mar_18 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//March24//Baseball-Session-03_18_24-Tests_Countermovement_Jump.csv")
+mar_25 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//March24//Baseball-Session-03_25_24-Tests_Countermovement_Jump.csv")
+mar_27 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//March24//Baseball-Session-03_27_24-Tests_Countermovement_Jump.csv")
+
+# april24 
+apr_1 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//April24//Baseball-Session-04_01_24-Tests_Countermovement_Jump.csv")
+apr_2 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//April24//Baseball-Session-04_02_24-Tests_Countermovement_Jump.csv")
+apr_3 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//April24//Baseball-Session-04_03_24-Tests_Countermovement_Jump.csv")
+apr_8 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//April24//Baseball-Session-04_08_24-Tests_Countermovement_Jump.csv")
+apr_10 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//April24//Baseball-Session-04_10_24-Tests_Countermovement_Jump.csv")
+apr_15 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//April24//Baseball-Session-04_15_24-Tests_Countermovement_Jump.csv")
+apr_22 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//April24//Baseball-Session-04_22_24-Tests_Countermovement_Jump.csv")
+apr_23 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//April24//Baseball-Session-04_23_24-Tests_Countermovement_Jump.csv")
+apr_24 <- read.csv("C://Users//mason//OneDrive//SportsScienceFellow//Hawkins Data//April24//Baseball-Session-04_24_24-Tests_Countermovement_Jump.csv")
+```
+
+```{r}
+aug23_data <- rbind(aug_15, aug_21, aug_23, aug_28)
+sep23_data <- rbind(sep_4, sep_8, sep_11, sep_18, sep_25)
+oct23_data <- rbind(oct_2, oct_4, oct_9, oct_16, oct_23, oct_30)
+nov23_data <- rbind(nov_6, nov_13, nov_27)
+dec23_data <- dec_4 
+jan24_data <- rbind(jan_9, jan_16, jan_23, jan_30)
+feb24_data <- rbind(feb_6, feb_13, feb_19, feb_20, feb_27, feb_28)
+mar24_data <- rbind(mar_05, mar_14, mar_18, mar_25, mar_27)
+apr24_data <- rbind(apr_1, apr_2, apr_3, apr_8, apr_10, apr_15, apr_22, apr_23, apr_24)
+
+cmj_data <- rbind(aug23_data, sep23_data, oct23_data, nov23_data, dec23_data, jan24_data, feb24_data, mar24_data, apr24_data)
+
+cmj_data <- cmj_data %>%
+  filter(Tags == "CMJ")
+
+cmj_data <- cmj_data[, c("Date", "Name", "Position", "System.Weight", "Jump.Height", "Jump.Momentum", "Time.To.Takeoff",
+                           "Peak.Relative.Propulsive.Power", "Braking.Net.Impulse", "L.R.Braking.Impulse.Index", "Propulsive.Net.Impulse",
+                           "L.R.Propulsive.Impulse.Index", "mRSI")]
+cmj_data <- cmj_data %>%
+  mutate(Position = ifelse(Position == "INF / RHP", "RHP", Position))
+
+cmj_data <- cmj_data %>%
+  filter(Name != "Cameron Grindle")
+cmj_data <- cmj_data %>%
+  filter(Name != "Nolan Kutney")
+
+# kept_positions = c("LHP", "RHP")
+
+lhp_data1 <- cmj_data %>% 
+  filter(Position == "LHP")
+
+rhp_data1 <- cmj_data %>% 
+  filter(Position == "RHP")
+
+summary(lhp_data1)
+summary(rhp_data1)
+
+unique(lhp_data1$Name)
+unique(rhp_data1$Name)
+```
+
+
+```{r}
+# Games vs BC 
+bc1 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//BCMarch15-17//BC@Pitt 02 15MAR24.csv")
+bc2 <- read_excel("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//BCMarch15-17//BC@Pitt 16MAR24.xlsx")
+bc3 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//BCMarch15-17//REVISED BC@Pitt 17MAR24.csv")
+
+# First 2 games vs GT 
+gt1 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//GTApril5-7//4-5-24 Pitt vs. Georgia Tech Game 1.csv")
+gt2 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//GTApril5-7//GT@Pitt 06APR24.csv")
+
+# Games vs. UVA 
+uva1 <- read_excel("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//VirginiaMarch22-24//REVISED Virginia@Pitt 22MAR24.xlsx")
+uva2 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//VirginiaMarch22-24//REVISED Virginia@Pitt 24MAR24.csv")
+uva3 <- read_excel("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//VirginiaMarch22-24//Virginia@Pitt 23MAR24.xlsx")
+
+# Games vs Duke 
+duke1 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//DukeApril13-14//REVISED Duke@Pitt G1 13APR24.csv")
+
+duke2 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//DukeApril13-14//REVISED Duke@Pitt G2 13APR24.csv")
+
+duke3 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//DukeApril13-14//Duke@Pitt 14APR24.csv")
+
+# Games vs Bryant 
+bryant1 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//BryantApril27-29//REVISED Bryant@Pitt 26APR2024.csv")
+bryant2 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//BryantApril27-29//REVISED Bryant@Pitt 27APR24.csv")
+bryant3 <- read.csv("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//BryantApril27-29//Bryant@Pitt 28APR24.csv")
+
+# Noncon (akron and ysu)
+akron <- read_excel("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//NonconGames2023-24//Pitt vs Akron 12MAR2024.xlsx")
+ysu <- read_excel("C://Users//mason//OneDrive//Pitt Baseball Data//CollectedBaseballData//NonconGames2023-24//Pitt vs Youngstown State 13MAR2024.xlsx")
+```
+
+
+```{r}
+bc1 <- bc1[, c("Pitcher", "PitcherTeam", "TaggedPitchType",  "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+bc2 <- bc2[, c("Pitcher", "PitcherTeam", "TaggedPitchType",  "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+bc3 <- bc3[, c("Pitcher", "PitcherTeam", "TaggedPitchType",  "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+
+gt1 <- gt1[, c("Pitcher", "PitcherTeam", "TaggedPitchType",  "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+gt2 <- gt2[, c("Pitcher", "PitcherTeam", "TaggedPitchType",  "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+
+uva1 <- uva1[, c("Pitcher", "PitcherTeam", "TaggedPitchType",  "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+uva2 <- uva2[, c("Pitcher", "PitcherTeam", "TaggedPitchType",  "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+uva3 <- uva3[, c("Pitcher", "PitcherTeam", "TaggedPitchType", "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+
+akron <- akron[, c("Pitcher", "PitcherTeam", "TaggedPitchType", "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+duke1 <- duke1[, c("Pitcher", "PitcherTeam", "TaggedPitchType", "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+duke2 <- duke2[, c("Pitcher", "PitcherTeam", "TaggedPitchType", "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+duke3 <- duke3[, c("Pitcher", "PitcherTeam", "TaggedPitchType", "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+ysu <- ysu[, c("Pitcher", "PitcherTeam", "TaggedPitchType", "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+bryant1 <- bryant1[, c("Pitcher", "PitcherTeam", "TaggedPitchType", "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+bryant2 <- bryant2[, c("Pitcher", "PitcherTeam", "TaggedPitchType", "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+bryant3 <- bryant3[, c("Pitcher", "PitcherTeam", "TaggedPitchType", "RelSpeed", "SpinRate", 
+                           "SpinAxis","RelHeight", "RelSide", "Extension", "InducedVertBreak", "HorzBreak", "yt_PitchSpinConfidence", 
+                           "yt_PitchReleaseConfidence", "Date", "PitcherThrows")]
+
+season_data <- rbind(bc1, bc2, bc3, gt1, gt2, uva1, uva2, uva3, akron, ysu, duke1, duke2, duke3, bryant1, bryant2, bryant3)
+```
+
+
+```{r}
+teams_kept <- c("Pittsburgh", "Pitt 2023-34 Roster")
+season_data <- season_data[season_data$PitcherTeam %in% teams_kept,] 
+
+season_data <- season_data[season_data$TaggedPitchType == "Fastball",] 
+
+season_data <- season_data %>%
+  filter(yt_PitchReleaseConfidence != 0, yt_PitchSpinConfidence > 0.95)
+
+season_data <- season_data[, c("Pitcher", "PitcherThrows", "Date", "RelSpeed", "SpinRate", "SpinAxis","RelHeight", "RelSide", "Extension",
+                               "InducedVertBreak", "HorzBreak")]
+
+season_data$HorzBreak <- abs(season_data$HorzBreak)
+season_data$RelSide <- abs(season_data$RelSide)
+
+season_data <- na.omit(season_data)
+
+# unique(season_data$PitcherThrows)
+
+lhp_data <- season_data[season_data$PitcherThrows == "Left",] 
+rhp_data <- season_data[season_data$PitcherThrows == "Right",] 
+
+unique(lhp_data$Pitcher)
+unique(rhp_data$Pitcher)
+```
+
+```{r}
+# rename common column for joining
+names(lhp_data1)[names(lhp_data1) == "Name"] <- "Pitcher"
+names(lhp_data1)[names(lhp_data1) == "Date"] <- "cmj_date"
+
+# left join based on the "Pitcher" column
+combined_lhp_data <- left_join(lhp_data1, lhp_data, by = "Pitcher")
+
+combined_lhp_data <- na.omit(combined_lhp_data)
+summary(combined_lhp_data)
+
+
+names(rhp_data1)[names(rhp_data1) == "Name"] <- "Pitcher"
+names(rhp_data1)[names(rhp_data1) == "Date"] <- "cmj_date"
+
+combined_rhp_data <- left_join(rhp_data1, rhp_data, by = "Pitcher")
+
+combined_rhp_data <- na.omit(combined_rhp_data)
+summary(combined_rhp_data)
+
+
+names(cmj_data)[names(cmj_data) == "Name"] <- "Pitcher"
+names(cmj_data)[names(cmj_data) == "Date"] <- "cmj_date"
+
+season_data <- left_join(cmj_data, season_data, by = "Pitcher")
+
+season_data <- na.omit(season_data)
+summary(season_data)
+```
+
+```{r}
+# correlation coefficients
+variables_of_interest <- combined_lhp_data[, c("RelSpeed", "System.Weight", "Jump.Height", "Jump.Momentum", "Time.To.Takeoff",
+                                            "Peak.Relative.Propulsive.Power", "Braking.Net.Impulse", "L.R.Braking.Impulse.Index",
+                                            "Propulsive.Net.Impulse", "L.R.Propulsive.Impulse.Index", "mRSI")]
+variables_of_interest1 <- combined_rhp_data[, c("RelSpeed", "System.Weight", "Jump.Height", "Jump.Momentum", "Time.To.Takeoff",
+                                            "Peak.Relative.Propulsive.Power", "Braking.Net.Impulse", "L.R.Braking.Impulse.Index",
+                                            "Propulsive.Net.Impulse", "L.R.Propulsive.Impulse.Index", "mRSI")]
+variables_of_interest2 <- season_data[, c("RelSpeed", "System.Weight", "Jump.Height", "Jump.Momentum", "Time.To.Takeoff",
+                                            "Peak.Relative.Propulsive.Power", "Braking.Net.Impulse", "L.R.Braking.Impulse.Index",
+                                            "Propulsive.Net.Impulse", "L.R.Propulsive.Impulse.Index", "mRSI")]
+
+correlation_matrix <- cor(variables_of_interest)
+correlation_matrix1 <- cor(variables_of_interest1)
+correlation_matrix2 <- cor(variables_of_interest2)
+
+lhp_corr <- corrplot(correlation_matrix, 
+                      method = "color", 
+                      type = "upper", 
+                      addCoef.col = "black", 
+                      tl.col = "black", 
+                      tl.srt = 45,
+                      number.cex = 0.6,  
+                      main = "Feature Correlations for LHP Fastball Data")
+
+rhp_corr <- corrplot(correlation_matrix1, 
+                      method = "color", 
+                      type = "upper", 
+                      addCoef.col = "black", 
+                      tl.col = "black", 
+                      tl.srt = 45,
+                      number.cex = 0.6,  
+                      main = "Feature Correlations for RHP Fastball Data")
+
+rhp_corr <- corrplot(correlation_matrix2, 
+                      method = "color", 
+                      type = "upper", 
+                      addCoef.col = "black", 
+                      tl.col = "black", 
+                      tl.srt = 45,
+                      number.cex = 0.6,  
+                      main = "Feature Correlations for All Fastball Data")
+```
+
+```{r}
+# Plot System.Weight vs. RelSpeed for combined_lhp_data
+ggplot(combined_lhp_data, aes(x = System.Weight, y = RelSpeed)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "steelblue") +
+  labs(title = "Body Weight vs. Velocity for LHP",
+       x = "Body Weight (N)",
+       y = "RelSpeed (mph)")
+
+# Plot System.Weight vs. RelSpeed for combined_rhp_data
+ggplot(combined_rhp_data, aes(x = System.Weight, y = RelSpeed)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "steelblue") +
+  labs(title = "Body Weight vs. Velocity for RHP",
+       x = "Body Weight (N)",
+       y = "RelSpeed (mph)")
+
+# Plot System.Weight vs. RelSpeed for season_data
+ggplot(season_data, aes(x = System.Weight, y = RelSpeed)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "steelblue") +
+  labs(title = "Body Weight vs. Velocity for All Fastball Data",
+       x = "Body Weight (N)",
+       y = "RelSpeed (mph)")
+```
+
+```{r}
+# Calculate average System.Weight and RelSpeed for each unique Pitcher in combined_lhp_data
+avg_lhp <- combined_lhp_data %>%
+  group_by(Pitcher) %>%
+  summarize(avg_System_Weight = mean(System.Weight),
+            avg_RelSpeed = mean(RelSpeed))
+
+# Calculate average System.Weight and RelSpeed for each unique Pitcher in combined_rhp_data
+avg_rhp <- combined_rhp_data %>%
+  group_by(Pitcher) %>%
+  summarize(avg_System_Weight = mean(System.Weight),
+            avg_RelSpeed = mean(RelSpeed))
+
+# Calculate average System.Weight and RelSpeed for each unique Pitcher in season_data
+avg_season <- season_data %>%
+  group_by(Pitcher) %>%
+  summarize(avg_System_Weight = mean(System.Weight),
+            avg_RelSpeed = mean(RelSpeed))
+
+# Plot System.Weight vs. RelSpeed for combined_lhp_data with a line of best fit
+ggplot(avg_lhp, aes(x = avg_System_Weight, y = avg_RelSpeed)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Body Weight vs. Velocity for LHP",
+       x = "Average Body Weight (N)",
+       y = "Average RelSpeed (mph)")
+
+# Plot System.Weight vs. RelSpeed for combined_rhp_data with a line of best fit
+ggplot(avg_rhp, aes(x = avg_System_Weight, y = avg_RelSpeed)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Body Weight vs. Velocity for RHP",
+       x = "Average Body Weight (N)",
+       y = "Average RelSpeed (mph)")
+
+# Plot System.Weight vs. RelSpeed for season_data with a line of best fit
+ggplot(avg_season, aes(x = avg_System_Weight, y = avg_RelSpeed)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  labs(title = "Body Weight vs. Velocity for All Fastball Data",
+       x = "Average Body Weight (N)",
+       y = "Average RelSpeed (mph)")
+```
+
+```{r}
+# multiple linear regression model
+model <- lm(RelSpeed ~  System.Weight + Jump.Height + Jump.Momentum + Time.To.Takeoff + Peak.Relative.Propulsive.Power + Braking.Net.Impulse +
+              L.R.Braking.Impulse.Index + Propulsive.Net.Impulse + L.R.Propulsive.Impulse.Index + mRSI, data = combined_lhp_data)
+
+# Summary of the regression model
+summary(model)
+
+# Check for multicollinearity
+vif <- car::vif(model)
+vif
+```
+
+```{r}
+# multiple linear regression model
+model1 <- lm(RelSpeed ~  System.Weight + Jump.Height + Jump.Momentum + Time.To.Takeoff + Peak.Relative.Propulsive.Power + Braking.Net.Impulse
+             + L.R.Braking.Impulse.Index + Propulsive.Net.Impulse + L.R.Propulsive.Impulse.Index + mRSI, data = combined_rhp_data)
+
+# Summary of the regression model
+summary(model1)
+
+# Check for multicollinearity
+vif1 <- car::vif(model1)
+vif1
+```
+
+```{r}
+# multiple linear regression model
+model2 <- lm(RelSpeed ~  System.Weight + Jump.Height + Jump.Momentum + Time.To.Takeoff + Peak.Relative.Propulsive.Power + Braking.Net.Impulse
+             + L.R.Braking.Impulse.Index + Propulsive.Net.Impulse + L.R.Propulsive.Impulse.Index + mRSI, data = season_data)
+
+# Summary of the regression model
+summary(model2)
+
+# Check for multicollinearity
+vif2 <- car::vif(model2)
+vif2
+```
